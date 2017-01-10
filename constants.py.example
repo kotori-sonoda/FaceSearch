@@ -1,0 +1,24 @@
+# -*- coding: cp932 -*-
+
+# Information for MS Cognitive Service.
+COGNITIVE_KEY = '[place cognitive service api key here]'
+COGNITIVE_HOST = 'api.projectoxford.ai'
+
+# Information for Google Custom Search.
+GCS_KEY = '[place gcs api key here]'
+GCS_ENGINE_ID = '[place gcs engine id here]'
+GCS_URI = 'https://www.googleapis.com/customsearch/v1?%s'
+
+# Trained person ids.
+PEOPLE = {
+    '[place person group name here]': {
+        '[place person id here]': '[place person name here]',
+        '[place person id here]': '[place person name here]',
+    },
+    # example
+    'CYaRon': {
+        '00000000-0000-0000-0000-000000000000': 'chika',
+        'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa': 'you',
+        'ffffffff-ffff-ffff-ffff-ffffffffffff': 'ruby'
+    }
+}

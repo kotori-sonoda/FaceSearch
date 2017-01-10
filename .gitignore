@@ -1,0 +1,5 @@
+*.pyc
+result
+testdata
+trainingdata
+constants.py
