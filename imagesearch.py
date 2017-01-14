@@ -11,7 +11,7 @@ import identify
 
 PAGE_SIZE = 10
 
-def search_image(word, page):
+def _search_image(word, page):
     param = {
         'searchType': 'image',
         'key': constants.GCS_KEY,
@@ -26,25 +26,18 @@ def search_image(word, page):
     if len(result['items']) > 0:
         return [item['link'] for item in result['items']]
 
-if __name__ == '__main__':
-    if len(sys.argv) != 4:
-        print('Usage: python imagesearch.py keyword page(up to 10) person_group')
-
-    word = sys.argv[1]
-    page = int(sys.argv[2])
-    group = sys.argv[3]
-
+def search(word, page, person_group):
     result = []
     start = 1
     for p in range(1, page + 1):
-        result.extend(search_image(word, start))
+        result.extend(_search_image(word, start))
         start = start + PAGE_SIZE
 
     personmap = {}
-    for k, v in constants.PEOPLE[group].items():
+    for k, v in constants.PEOPLE[person_group].items():
         personmap[v] = []
     for link in result:
-        people_found = identify.identify_person(False, link, group)
+        people_found = identify.identify_person(False, link, person_group)
         if len(people_found) > 0:
             for p in people_found:
                 personmap[p].append(link)
@@ -52,10 +45,19 @@ if __name__ == '__main__':
 
     for k, v in personmap.items():
         out_dir = os.path.join('result', k)
-        if len(v) > 0 and not os.path.exists():
+        if len(v) > 0 and not os.path.exists(out_dir):
             os.mkdir(out_dir)
         for url in v:
             filename = os.path.basename(url)
             urllib.urlretrieve(url, os.path.join(out_dir, filename))
 
+if __name__ == '__main__':
+    if len(sys.argv) != 4:
+        print('Usage: python imagesearch.py keyword page(up to 10) person_group')
+
+    word = sys.argv[1]
+    page = int(sys.argv[2])
+    person_group = sys.argv[3]
+
+    search(word, page, person_group)
     print('done.')

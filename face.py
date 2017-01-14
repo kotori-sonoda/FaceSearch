@@ -6,7 +6,7 @@ import os
 import os.path
 import constants
 
-def request(method, host, path, header, body):
+def _request(method, host, path, header, body):
     conn = httplib.HTTPSConnection(host)
     conn.request(method, path, body, header)
     response = conn.getresponse()
@@ -18,7 +18,7 @@ def get_face_id_by_file(file_path):
         'Ocp-Apim-Subscription-Key': constants.COGNITIVE_KEY
     }
 
-    data = request('POST', constants.COGNITIVE_HOST, '/face/v1.0/detect?', header, open(file_path, 'rb'))
+    data = _request('POST', constants.COGNITIVE_HOST, '/face/v1.0/detect?', header, open(file_path, 'rb'))
 
     result = json.loads(data)
     face_ids = []
@@ -39,7 +39,7 @@ def get_face_id_by_url(url):
         'url': url
     }
 
-    data = request('POST', constants.COGNITIVE_HOST, '/face/v1.0/detect?', header, json.dumps(body))
+    data = _request('POST', constants.COGNITIVE_HOST, '/face/v1.0/detect?', header, json.dumps(body))
 
     result = json.loads(data)
     face_ids = []
@@ -61,7 +61,7 @@ def create_person_group(person_group_name):
         'name': person_group_name
     }
 
-    data = request('PUT', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s' % person_group_name, header, json.dumps(body))
+    data = _request('PUT', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s' % person_group_name, header, json.dumps(body))
 
     if len(data) > 0:
         print(data)
@@ -80,7 +80,7 @@ def create_person(person_group, person_name):
         'name': person_name
     }
 
-    data = json.loads(request('POST', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s/persons' % person_group, header, json.dumps(body)))
+    data = json.loads(_request('POST', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s/persons' % person_group, header, json.dumps(body)))
 
     try:
         if 'personId' in data:
@@ -100,7 +100,7 @@ def add_person_face(person_group, person, file_path):
         'Ocp-Apim-Subscription-Key': constants.COGNITIVE_KEY
     }
 
-    data = json.loads(request('POST', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s/persons/%s/persistedFaces' % (person_group, person), header, open(file_path, 'rb')))
+    data = json.loads(_request('POST', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s/persons/%s/persistedFaces' % (person_group, person), header, open(file_path, 'rb')))
 
     try:
         if 'persistedFaceId' in data:
@@ -117,7 +117,7 @@ def train_person_group(person_group):
         'Ocp-Apim-Subscription-Key': constants.COGNITIVE_KEY
     }
 
-    data = request('POST', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s/train' % person_group, header, {})
+    data = _request('POST', constants.COGNITIVE_HOST, '/face/v1.0/persongroups/%s/train' % person_group, header, {})
 
     if len(data) > 0:
         print(data)

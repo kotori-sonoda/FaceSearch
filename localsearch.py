@@ -7,7 +7,7 @@ import shutil
 import constants
 import identify
 
-def search_dir(dir_path, person_group):
+def search(dir_path, person_group):
     personmap = {}
     group = constants.PEOPLE[person_group]
 
@@ -34,5 +34,5 @@ if __name__ == '__main__':
         print('Usage: python localsearch.py dir_path person_group')
         sys.exit()
 
-    search_dir(sys.argv[1], sys.argv[2])
+    search(sys.argv[1], sys.argv[2])
     print('done.')

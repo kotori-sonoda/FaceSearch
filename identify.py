@@ -1,4 +1,5 @@
 # -*- coding: cp932 -*-
+import httplib
 import sys
 import os
 import os.path
@@ -6,6 +7,12 @@ import json
 import time
 import constants
 import face as f
+
+def _request(method, host, path, header, body):
+    conn = httplib.HTTPSConnection(host)
+    conn.request(method, path, body, header)
+    response = conn.getresponse()
+    return response.read()
 
 def identify_person(is_local, src, person_group):
     print('Identifying person...')
@@ -24,7 +31,7 @@ def identify_person(is_local, src, person_group):
         'personGroupId': person_group
     }
 
-    data = json.loads(f.request('POST', constants.COGNITIVE_HOST, '/face/v1.0/identify', header, json.dumps(body)))
+    data = json.loads(_request('POST', constants.COGNITIVE_HOST, '/face/v1.0/identify', header, json.dumps(body)))
     try:
         if 'error' in data:
             print(data)
