@@ -26,6 +26,9 @@ def identify_person(is_local, src, person_group):
     else:
         face_ids = f.get_face_id_by_url(src)
 
+    if len(face_ids) == 0:
+        return
+
     body = {
         'faceIds': face_ids,
         'personGroupId': person_group
