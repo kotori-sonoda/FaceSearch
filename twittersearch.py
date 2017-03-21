@@ -25,13 +25,12 @@ def query_twitter(kwd, count):
     links = []
     for tw in res['statuses']:
         if 'extended_entities' in tw:
-            if 'media' in tw['extended_entities']:
-                for media in tw['extended_entities']['media']:
-                    links.append(media['media_url'])
+            for media in tw['extended_entities']['media']:
+                links.append(media['media_url'])
         else:
             if 'media' in tw['entities']:
-                links.append(tw['entities']['media']['media_url'])
-
+                for media in tw['entities']['media']:
+                    links.append(media['media_url'])
     return links
 
 def identify(links, person_group):
@@ -54,7 +53,7 @@ def identify(links, person_group):
             urllib.urlretrieve(url, os.path.join(out_dir, filename))
 
 if __name__ == '__main__':
-    kwd = sys.argv[1]
+    kwd = sys.argv[1].decode('cp932').encode('utf8')
     count = int(sys.argv[2])
 
     links = query_twitter(kwd, count)
